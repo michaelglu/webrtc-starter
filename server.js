@@ -38,5 +38,8 @@ socket.on('rtcRequest',function(data){
 socket.on('rtcResponse',function(data){
   socket.broadcast.emit('rtcResponse',data);
 })
+socket.on('rtcICE',function(data){
+  socket.broadcast.emit('rtcICE',data);
+})
 
 })

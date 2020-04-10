@@ -76,6 +76,14 @@ socket.on('rtcResponse',function(data){
 
 })
 
+socket.on('rtcICE',function(data){
+  console.log(`RTC_ICE from ${data.from} to ${data.to}`);
+  console.log(`RTC_ICE body: ${data.candidate}`);
+  pc.addIceCandidate(data.candidate).then(success=>console.log(success),error=>console.log(error));
+
+
+})
+
 function callNeighbor(){
   if(buddy=={}){console.log('CALL_NEIGHBOR Neighbor NULL')}
   else{
@@ -154,13 +162,14 @@ function onIceCandidate(pc, event) {
   console.log('**ICE** '+event.candidate)
   pc.addIceCandidate(event.candidate)
       .then(
-          () => onAddIceCandidateSuccess(pc),
+          () => onAddIceCandidateSuccess(pc,event.candidate),
           err => onAddIceCandidateError(pc, err)
       );
   console.log(`PC ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
 }
 
-function onAddIceCandidateSuccess() {
+function onAddIceCandidateSuccess(peerConnection,candidate) {
+  socket.emit("rtcICE",{from:name,to:buddy.name, candidate:candidate});
   console.log('AddIceCandidate success.');
 }
 
