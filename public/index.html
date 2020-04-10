@@ -11,9 +11,18 @@
   <p>WebRTC Test</p>
   <button type="button" id="call-button" disabled="true">Call Neighbor</button>
   <div>
-      <div class="label">audio</div>
+      <div class="label">Local Audio</div>
       <audio id="audio1" autoplay controls muted></audio>
-      <video id="video1" autoplay controls muted></video>
+
+      <div class="label">Remote Audio</div>
+      <audio id="audio2" controls muted></audio>
+
+  </div>
+  <div>
+    <div class="label">Local Video</div>
+    <video id="video1" autoplay controls muted></video>
+    <div class="label">Remote Video</div>
+    <video id="video2" autoplay controls muted></video>
   </div>
 </body>
 </html>

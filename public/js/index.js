@@ -4,8 +4,8 @@ var myId;
 let buddy={};
 let isConnected=false;
 let button;
-let audio;
-let video;
+let localOut;
+let remoteOut;
 let pc;
 let localStream;
 
@@ -18,7 +18,8 @@ const name = "Player-"+Math.floor(Math.random() * Math.floor(1000))+"-"+Math.flo
 socket.on('connect',function(){
   console.log('SOCKETIO connected');
   button= document.getElementById("call-button");
-  audio= document.getElementById('video1');
+  localOut= document.getElementById('video1');
+  remoteOut=document.getElementById('video2');
   button.onclick=callNeighbor;
   socket.emit('player connect',{name,translation:[0,0,0],rotation:[0,0,0]});
 });
@@ -49,13 +50,18 @@ socket.on('rtcRequest',function(data){
   pc.setRemoteDescription(data.body).then(success=>{
     console.log('SET DESCRIPTION');
     console.log(pc.remoteDescription);
-    pc.createAnswer().then(answer=>{
-      pc.setLocalDescription(answer).then(success=>{
-          socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
-      },error=>{console.log(error)})
-
-    },error=>{console.log(error)});},
+    navigator.mediaDevices.getUserMedia(constraints).then(handleCall).catch(handleError);
+    // pc.createAnswer().then(answer=>{
+    //   pc.setLocalDescription(answer).then(success=>{
+    //       socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
+    //
+    //   },error=>{console.log(error)})
+    //
+    // },error=>{console.log(error)})
+    ;},
     error=>{console.log(error)})
+
+
 
 })
 
@@ -84,10 +90,9 @@ function callNeighbor(){
   }
 }
 
-
 function handleSuccess(stream) {
   console.log(stream);
-  audio.srcObject = stream;
+  localOut.srcObject = stream;
 
   localStream = stream;
   const audioTracks = localStream.getAudioTracks();
@@ -112,6 +117,27 @@ function handleSuccess(stream) {
       console.log('RTC FAILED to create offer');
       console.log(failure);
     })
+  // window.stream = stream; // make variable available to browser console
+  // audio.srcObject = stream;
+}
+function handleCall(stream) {
+  console.log(stream);
+  localOut.srcObject = stream;
+
+  localStream = stream;
+  const audioTracks = localStream.getAudioTracks();
+  if (audioTracks.length > 0) {
+    console.log(`Using Audio device: ${audioTracks[0].label}`);
+  }
+  localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+  console.log('Adding Local Stream to peer connection');
+  pc.createAnswer().then(answer=>{
+    pc.setLocalDescription(answer).then(success=>{
+        socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
+
+    },error=>{console.log(error)})
+
+  },error=>{console.log(error)})
   // window.stream = stream; // make variable available to browser console
   // audio.srcObject = stream;
 }
@@ -146,11 +172,6 @@ function onSetSessionDescriptionError(error) {
 }
 
 function gotRemoteStream(e) {
-  // console.log(e.streams[0]);
-  // if (audio.srcObject !== e.streams[0]) {
-  //   audio.srcObject = e.streams[0];
-  //   console.log('Received remote stream');
-  // }
   console.log(e.streams);
-  audio.srcObject=e.streams[0];
+  remoteOut.srcObject=e.streams[0];
 }
