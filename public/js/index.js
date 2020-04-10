@@ -160,16 +160,16 @@ function handleError(error) {
 
 function onIceCandidate(pc, event) {
   console.log('**ICE** '+event.candidate)
-  pc.addIceCandidate(event.candidate)
-      .then(
-          () => onAddIceCandidateSuccess(pc,event.candidate),
-          err => onAddIceCandidateError(pc, err)
-      );
+  socket.emit("rtcICE",{from:name,to:buddy.name, candidate:event.candidate});
+  // pc.addIceCandidate(event.candidate)
+  //     .then(
+  //         () => onAddIceCandidateSuccess(pc,event.candidate),
+  //         err => onAddIceCandidateError(pc, err)
+  //     );
   console.log(`PC ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
 }
 
 function onAddIceCandidateSuccess(peerConnection,candidate) {
-  socket.emit("rtcICE",{from:name,to:buddy.name, candidate:candidate});
   console.log('AddIceCandidate success.');
 }
 
