@@ -13,6 +13,7 @@ const constraints = window.constraints = {
   audio: true,
   video: true
 };
+// const configuration = {iceServers: [{urls: 'stuns:stun1.l.google.com:19302'}]};
 const name = "Player-"+Math.floor(Math.random() * Math.floor(1000))+"-"+Math.floor(Math.random() * Math.floor(1000))+"-"+Math.floor(Math.random() * Math.floor(1000));
 
 socket.on('connect',function(){
@@ -43,7 +44,7 @@ socket.on('rtcRequest',function(data){
   console.log(`RTC_REQUEST body: ${data.body}`);
 
   const offer=data.body;
-  const servers = null;
+  const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19302'}]};;
   pc=new RTCPeerConnection(servers);
   pc.onicecandidate = e => onIceCandidate(pc, e);
   pc.ontrack=gotRemoteStream;
@@ -79,7 +80,7 @@ function callNeighbor(){
   if(buddy=={}){console.log('CALL_NEIGHBOR Neighbor NULL')}
   else{
 
-    const servers = null;
+    const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19302'}]};
     pc=new RTCPeerConnection(servers);
     pc.onicecandidate = e => onIceCandidate(pc, e);
     pc.ontrack=gotRemoteStream;
