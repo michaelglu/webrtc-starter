@@ -182,6 +182,7 @@ function onSetSessionDescriptionError(error) {
 }
 
 function gotRemoteStream(e) {
+  if(remoteOut.srcObject){return;}
   console.log(e.streams);
   remoteOut.srcObject=e.streams[0];
 }
