@@ -20,6 +20,7 @@ io.on('connection',function(socket){
         let client = JSON.parse(JSON.stringify(clients[i]));
         socket.emit("NewPlayer",(client));
   }
+  socket.emit("End");
   socket.broadcast.emit("NewPlayer",player)
   clients.push(JSON.parse(JSON.stringify(player)));
   currentPlayer.name=JSON.parse(JSON.stringify((player))).name;
