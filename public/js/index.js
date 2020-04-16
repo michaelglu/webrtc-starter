@@ -142,19 +142,19 @@ function handleError(error) {
 function onIceCandidate(pc, event) {
   // console.log('**ICE** '+event.candidate)
   socket.emit("rtcICE",{from:name,to:buddy.name, candidate:event.candidate});
-  // console.log(`PC ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
+  console.log(`PC ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
 }
 
 function onAddIceCandidateSuccess(peerConnection,candidate) {
-  // console.log('AddIceCandidate success.');
+  console.log('AddIceCandidate success.');
 }
 
 function onAddIceCandidateError(error) {
-  // console.log(`Failed to add ICE Candidate: ${JSON.stringify(error)}`);
+  console.log(`Failed to add ICE Candidate: ${JSON.stringify(error)}`);
 }
 
 function onSetSessionDescriptionError(error) {
-  // console.log(`Failed to set session description: ${(error).toString()}`);
+  console.log(`Failed to set session description: ${(error).toString()}`);
 }
 
 function gotRemoteStream(e) {
