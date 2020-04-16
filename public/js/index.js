@@ -47,6 +47,7 @@ socket.on('rtcRequest',function(data){
   pc.onicecandidate = e => onIceCandidate(pc, e);
   pc.ontrack=gotRemoteStream;
   pc.onnegotiationneeded=function(){
+    console.log('NEGOTIATION NEEDED!!!')
     pc.createAnswer().then(answer=>{
       pc.setLocalDescription(answer).then(success=>{
           socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
@@ -153,13 +154,13 @@ function handleCall(stream) {
   }
   localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
   // console.log('Adding Local Stream to peer connection');
-  // pc.createAnswer().then(answer=>{
-  //   pc.setLocalDescription(answer).then(success=>{
-  //       socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
-  //
-  //   },error=>{console.log(error)})
-  //
-  // },error=>{console.log(error)})
+  pc.createAnswer().then(answer=>{
+    pc.setLocalDescription(answer).then(success=>{
+        socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
+
+    },error=>{console.log(error)})
+
+  },error=>{console.log(error)})
 }
 
 function handleError(error) {
