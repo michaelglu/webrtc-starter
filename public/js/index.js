@@ -48,13 +48,14 @@ socket.on('rtcRequest',function(data){
   pc.ontrack=gotRemoteStream;
   pc.onnegotiationneeded=function(){
     console.log('NEGOTIATION NEEDED!!!')
-    pc.createAnswer().then(answer=>{
-      pc.setLocalDescription(answer).then(success=>{
-          socket.emit('rtcResponse',{from:name,to:buddy.name,body:pc.localDescription});
+    // console.log(success)
+    pc.setLocalDescription(success).then(success=>{
+      socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
 
-      },error=>{console.log(error)})
-
-    },error=>{console.log(error)})
+    },error=>{
+      // console.log('RTC FAILED to set description');
+      console.log(failure);
+    });
   }
 
 
