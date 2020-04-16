@@ -76,7 +76,7 @@ function callNeighbor(){
   if(buddy=={}){console.log('CALL_NEIGHBOR Neighbor NULL')}
   else{
 
-    const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19302'}]};
+    const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19305'}]};
     pc=new RTCPeerConnection(servers);
     pc.onicecandidate = e => onIceCandidate(pc, e);
     pc.ontrack=gotRemoteStream;
