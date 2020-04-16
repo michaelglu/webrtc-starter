@@ -42,7 +42,7 @@ socket.on('rtcRequest',function(data){
   // console.log(`RTC_REQUEST body: ${data.body}`);
 
   const offer=data.body;
-  const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19302'}]};;
+  const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19305'}]};;
   pc=new RTCPeerConnection(servers);
   pc.onicecandidate = e => onIceCandidate(pc, e);
   pc.ontrack=gotRemoteStream;
