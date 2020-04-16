@@ -80,6 +80,24 @@ function callNeighbor(){
     pc=new RTCPeerConnection(servers);
     pc.onicecandidate = e => onIceCandidate(pc, e);
     pc.ontrack=gotRemoteStream;
+    pc.onnegotiationneeded=function(){
+      pc.createOffer().then(success=>{
+        // console.log('RTC SUCCESS')
+        console.log(success)
+        pc.setLocalDescription(success).then(success=>{
+          socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
+
+        },error=>{
+          // console.log('RTC FAILED to set description');
+          console.log(failure);
+        });
+
+      },
+        failure=>{
+          // console.log('RTC FAILED to create offer');
+          console.log(failure);
+        })
+    }
 
     // console.log('Created local peer connection object pc1');
     navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
@@ -96,22 +114,22 @@ function handleSuccess(stream) {
   }
   localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
   // console.log('Adding Local Stream to peer connection');
-  pc.createOffer().then(success=>{
-    // console.log('RTC SUCCESS')
-    console.log(success)
-    pc.setLocalDescription(success).then(success=>{
-      socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
-
-    },error=>{
-      // console.log('RTC FAILED to set description');
-      console.log(failure);
-    });
-
-  },
-    failure=>{
-      // console.log('RTC FAILED to create offer');
-      console.log(failure);
-    })
+  // pc.createOffer().then(success=>{
+  //   // console.log('RTC SUCCESS')
+  //   console.log(success)
+  //   pc.setLocalDescription(success).then(success=>{
+  //     socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
+  //
+  //   },error=>{
+  //     // console.log('RTC FAILED to set description');
+  //     console.log(failure);
+  //   });
+  //
+  // },
+  //   failure=>{
+  //     // console.log('RTC FAILED to create offer');
+  //     console.log(failure);
+  //   })
 }
 function handleCall(stream) {
   console.log(stream);
