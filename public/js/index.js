@@ -79,8 +79,11 @@ socket.on('rtcResponse',function(data){
 
 socket.on('rtcICE',function(data){
   // console.log(`RTC_ICE from ${data.from} to ${data.to}`);
-  // console.log(`RTC_ICE body: ${data.candidate}`);
-  pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(success=>console.log(success),error=>console.log(error));
+  console.log("_____GOT RTC ICE_______");
+  console.log(data);
+  console.log((data.body));
+
+  pc.addIceCandidate((data.body)).then(success=>console.log(success),error=>console.log(error));
 
 
 })
@@ -171,9 +174,11 @@ function handleError(error) {
 
 
 function onIceCandidate(pc, event) {
-  // console.log('**ICE** '+event.candidate)
-  socket.emit("rtcICE",{from:name,to:buddy.name, candidate:event.candidate});
-  console.log(`PC ICE candidate:\n${event.candidate ? event.candidate.candidate : '(null)'}`);
+  const candidate=event.candidate
+  console.log('**SENDING ICE** '+candidate)
+  console.log(candidate)
+  socket.emit("rtcICE",{from:name,to:buddy.name, body:candidate});
+  console.log(`PC ICE candidate:\n${candidate ? candidate.candidate : '(null)'}`);
 }
 
 function onAddIceCandidateSuccess(peerConnection,candidate) {
