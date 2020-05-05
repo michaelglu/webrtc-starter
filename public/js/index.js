@@ -175,6 +175,7 @@ function handleError(error) {
 
 function onIceCandidate(pc, event) {
   const candidate=event.candidate
+  if(candidate==null){return}
   console.log('**SENDING ICE** '+candidate)
   console.log(candidate)
   socket.emit("rtcICE",{from:name,to:buddy.name, body:candidate});
