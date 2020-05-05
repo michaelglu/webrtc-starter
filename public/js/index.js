@@ -80,7 +80,7 @@ socket.on('rtcResponse',function(data){
 socket.on('rtcICE',function(data){
   // console.log(`RTC_ICE from ${data.from} to ${data.to}`);
   // console.log(`RTC_ICE body: ${data.candidate}`);
-  pc.addIceCandidate(data.candidate).then(success=>console.log(success),error=>console.log(error));
+  pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(success=>console.log(success),error=>console.log(error));
 
 
 })
