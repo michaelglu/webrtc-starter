@@ -182,7 +182,7 @@ function gotRemoteStream(e) {
   if(document.getElementById(`video_${e.streams[0].id}`)){return;}
   videoContainer.appendChild(remoteOut);
   remoteOut.setAttribute("id",`video_${e.streams[0].id}`);
-  remoteOut.muted=true;
+  remoteOut.muted=false;
   remoteOut.autoplay=true;
   if(remoteOut.srcObject){return;}
   console.log(e.streams);
