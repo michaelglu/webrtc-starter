@@ -38,33 +38,20 @@ socket.on('PlayerDisconnect',function(data){
 })
 
 socket.on('rtcRequest',function(data){
-  // console.log(`RTC_REQUEST from ${data.from} to ${data.to}`);
-  // console.log(`RTC_REQUEST body: ${data.body}`);
-
   const offer=data.body;
   const servers = {iceServers: [{urls: 'stun:stun1.l.google.com:19305'}]};;
   pc=new RTCPeerConnection(servers);
   pc.onicecandidate = e => onIceCandidate(pc, e);
   pc.ontrack=gotRemoteStream;
   pc.onnegotiationneeded=function(){
-    console.log('NEGOTIATION NEEDED!!!')
-    // console.log(success)
-    pc.setLocalDescription(success).then(success=>{
-      socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
-
-    },error=>{
-      // console.log('RTC FAILED to set description');
-      console.log(failure);
-    });
-  }
-
-
+    console.log('NEGOTIATION NEEDED!!!')}
   pc.setRemoteDescription(data.body).then(success=>{
-    // console.log('SET DESCRIPTION');
-    // console.log(pc.remoteDescription);
     navigator.mediaDevices.getUserMedia(constraints).then(handleCall).catch(handleError);
-    ;},
-    error=>{console.log(error)})
+    },
+    error=>{console.log(error)
+    }
+  );
+
 })
 
 socket.on('rtcResponse',function(data){
@@ -98,24 +85,19 @@ function callNeighbor(){
     pc.ontrack=gotRemoteStream;
     pc.onnegotiationneeded=function(){
       pc.createOffer().then(success=>{
-        // console.log('RTC SUCCESS')
         console.log(success)
         pc.setLocalDescription(success).then(success=>{
           socket.emit('rtcRequest',{from:name,to:buddy.name,body:pc.localDescription});
 
         },error=>{
-          // console.log('RTC FAILED to set description');
           console.log(failure);
         });
 
       },
         failure=>{
-          // console.log('RTC FAILED to create offer');
           console.log(failure);
         })
     }
-
-    // console.log('Created local peer connection object pc1');
     navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
   }
 }
